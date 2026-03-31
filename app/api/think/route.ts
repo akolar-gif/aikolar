@@ -337,7 +337,8 @@ export async function POST(request: Request) {
     try {
       const result = await buildWithGpt(input);
       return NextResponse.json(result);
-    } catch {
+    } catch (error) {
+      console.error("🔥 OpenAI ERROR:", error);
       return NextResponse.json(buildFallback(input));
     }
   } catch {

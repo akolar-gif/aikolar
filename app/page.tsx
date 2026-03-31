@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useMemo, useState } from "react";
 
 /* ---------- TYPES ---------- */
 
@@ -12,18 +12,6 @@ type Artifact = {
   result: string;
   href: string;
 };
-
-type ExperienceStage =
-  | "idle"
-  | "intention"
-  | "interpretation"
-  | "friction"
-  | "expansion"
-  | "transformation"
-  | "bridge"
-  | "artifacts"
-  | "mirror"
-  | "exit";
 
 type ThoughtProfile =
   | "ambition"
@@ -51,103 +39,40 @@ const artifacts: Artifact[] = [
     initial: "I should have a website that represents me.",
     distortion: "You want to look coherent.",
     shift: "Coherence is often just well-designed inconsistency.",
-    result:
-      "An early AI project. Less a statement than a trace of conceptual thinking.",
+    result: "An early AI project.",
     href: "https://andreas.kolar.berlin",
   },
   {
     id: "art-kolar",
     initial: "Can AI create art?",
     distortion: "You’re asking if authorship still matters.",
-    shift:
-      "Art was never about who made it. It was about what it makes visible.",
-    result:
-      "AI-generated images paired with gallery-like texts. A change in observation.",
+    shift: "Art was never about who made it.",
+    result: "AI art + text experiments.",
     href: "https://art.kolar.berlin",
   },
   {
     id: "sinfrey",
-    initial: "What if I build a fashion brand with AI?",
-    distortion: "You want to see if reality is optional.",
+    initial: "What if I build a fashion brand?",
+    distortion: "You want to test perception.",
     shift: "Perception creates value faster than production.",
-    result:
-      "A fictional brand that feels real enough to expose how value is staged.",
+    result: "A fictional fashion brand.",
     href: "https://sinfrey.com",
   },
   {
     id: "albums",
     initial: "Can AI generate music?",
-    distortion: "You’re trying to feel something through a machine.",
-    shift: "The music was never the point. The narrative was.",
-    result:
-      "Narrative-driven albums that behave more like emotional sequences.",
+    distortion: "You want to feel something through a machine.",
+    shift: "The narrative matters more than the sound.",
+    result: "Narrative-driven AI albums.",
     href: "#",
   },
 ];
 
-/* ---------- HELPERS ---------- */
-
-function normalizeInput(value: string) {
-  const t = value.trim();
-  if (!t) return "I want to build something meaningful with AI.";
-  return /[.!?]$/.test(t) ? t : t + ".";
-}
-
-/* ---------- WORD MORPH ---------- */
-
-function WordMorph({ text }: { text: string }) {
-  const blocks = text.split("\n");
-
-  return (
-    <div style={{ display: "grid", gap: "0.6rem" }}>
-      {blocks.map((block, i) => (
-        <p key={i} style={{ fontSize: "clamp(2rem,4vw,4rem)", margin: 0 }}>
-          {block}
-        </p>
-      ))}
-    </div>
-  );
-}
-
-/* ---------- ARTIFACT CARD ---------- */
-
-function ArtifactCard({
-  artifact,
-  isPrimary,
-  onEnter,
-  onLeave,
-}: any) {
-  return (
-    <div
-      onMouseEnter={onEnter}
-      onMouseLeave={onLeave}
-      style={{
-        opacity: isPrimary ? 1 : 0.6,
-        transform: isPrimary ? "scale(1)" : "scale(0.97)",
-        transition: "all 0.6s ease",
-        padding: "3rem 0",
-      }}
-    >
-      <p>{artifact.initial}</p>
-      <p>{artifact.distortion}</p>
-      <p>{artifact.shift}</p>
-
-      <p style={{ marginTop: "1rem" }}>
-        {isPrimary ? "first resonance" : "artifact"}
-      </p>
-
-      <p>{artifact.result}</p>
-    </div>
-  );
-}
-
-/* ---------- MAIN ---------- */
+/* ---------- COMPONENT ---------- */
 
 export default function Page() {
   const [input, setInput] = useState("");
-  const [thought, setThought] = useState("");
   const [result, setResult] = useState<ThinkResult | null>(null);
-  const [artifactIndex, setArtifactIndex] = useState(0);
   const [hoverArtifact, setHoverArtifact] = useState<string | null>(null);
 
   const profile = result?.profile ?? "default";
@@ -178,17 +103,16 @@ export default function Page() {
     if (active === "sinfrey") base += "\n\nMaybe visibility matters more.";
     if (active === "art-kolar") base += "\n\nMaybe meaning is perception.";
     if (active === "albums") base += "\n\nMaybe structure is the point.";
+    if (active === "andreas-kolar") base += "\n\nMaybe consistency is overrated.";
 
     return base;
   }, [result, hoverArtifact, prioritizedArtifacts]);
 
   async function run() {
-    const t = normalizeInput(input);
-    setThought(t);
-
     const r = await fetch("/api/think", {
       method: "POST",
-      body: JSON.stringify({ input: t }),
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ input }),
     });
 
     const data = await r.json();
@@ -196,35 +120,45 @@ export default function Page() {
   }
 
   return (
-    <main style={{ padding: "4rem" }}>
+    <main style={{ padding: 40, background: "black", color: "white" }}>
       {!result && (
         <>
           <input
             value={input}
             onChange={(e) => setInput(e.target.value)}
             placeholder="start with a thought"
+            style={{ fontSize: 24, width: "100%" }}
           />
-          <button onClick={run}>enter</button>
+          <button onClick={run} style={{ marginTop: 20 }}>
+            enter
+          </button>
         </>
       )}
 
       {result && (
         <>
-          <WordMorph text={thought} />
-          <WordMorph text={result.interpretation} />
-          <WordMorph text={transformed} />
+          <h2>{result.interpretation}</h2>
+          <pre style={{ whiteSpace: "pre-line" }}>{transformed}</pre>
 
-          {prioritizedArtifacts
-            .slice(0, artifactIndex + 1)
-            .map((a) => (
-              <ArtifactCard
-                key={a.id}
-                artifact={a}
-                isPrimary={a.id === prioritizedArtifacts[0]?.id}
-                onEnter={() => setHoverArtifact(a.id)}
-                onLeave={() => setHoverArtifact(null)}
-              />
-            ))}
+          {prioritizedArtifacts.map((a) => (
+            <div
+              key={a.id}
+              onMouseEnter={() => setHoverArtifact(a.id)}
+              onMouseLeave={() => setHoverArtifact(null)}
+              style={{
+                marginTop: 40,
+                opacity: a.id === prioritizedArtifacts[0]?.id ? 1 : 0.5,
+              }}
+            >
+              <p>{a.initial}</p>
+              <p>{a.shift}</p>
+              <p>
+                {a.id === prioritizedArtifacts[0]?.id
+                  ? "first resonance"
+                  : "artifact"}
+              </p>
+            </div>
+          ))}
         </>
       )}
     </main>

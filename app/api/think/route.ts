@@ -286,7 +286,7 @@ challenge the obvious intention of the thought
 reveal what the person might actually be trying to achieve or avoid
 
 3. Turn it inward:
-shift the thought from action → self-awareness
+shift the thought from action -> self-awareness
 
 Important:
 - do NOT label these steps
@@ -309,10 +309,10 @@ Writing style:
 - silence is part of meaning
 
 Rules:
-- interpretation: 1–3 short lines
+- interpretation: 1-3 short lines
 - friction: exactly 3 lines
 - expansion: exactly 2 lines
-- transformation: 1–2 lines
+- transformation: 1-2 lines
 - avoid repetition
 - avoid generic AI phrasing
 - allow subtle contradiction

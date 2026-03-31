@@ -247,6 +247,41 @@ export default function Page() {
   const frictionLines = thinkResult?.friction ?? [];
   const expansionLines = thinkResult?.expansion ?? [];
   const profile = thinkResult?.profile ?? "default";
+  const prioritizedArtifacts = useMemo(() => {
+    const order: Record<string, string[]> = {
+      identity: ["sinfrey", "andreas-kolar", "art-kolar", "albums"],
+      creation: ["art-kolar", "albums", "sinfrey", "andreas-kolar"],
+      ambition: ["andreas-kolar", "sinfrey", "albums", "art-kolar"],
+      efficiency: ["andreas-kolar", "albums", "sinfrey", "art-kolar"],
+      meaning: ["art-kolar", "albums", "andreas-kolar", "sinfrey"],
+      fear: ["andreas-kolar", "art-kolar", "albums", "sinfrey"],
+      default: ["andreas-kolar", "art-kolar", "sinfrey", "albums"],
+    };
+
+    const sorted = order[profile] || order.default;
+
+    return sorted
+      .map(id => artifacts.find(a => a.id === id))
+      .filter(Boolean);
+  }, [profile]);
+
+  const prioritizedArtifacts = useMemo(() => {
+    const order = {
+      identity: ["sinfrey", "andreas-kolar", "art-kolar", "albums"],
+      creation: ["art-kolar", "albums", "sinfrey", "andreas-kolar"],
+      ambition: ["andreas-kolar", "sinfrey", "albums", "art-kolar"],
+      efficiency: ["andreas-kolar", "albums", "sinfrey", "art-kolar"],
+      meaning: ["art-kolar", "albums", "andreas-kolar", "sinfrey"],
+      fear: ["andreas-kolar", "art-kolar", "albums", "sinfrey"],
+      default: ["andreas-kolar", "art-kolar", "sinfrey", "albums"],
+    };
+
+    const sorted = order[profile] || order.default;
+
+    return sorted
+      .map(id => artifacts.find(a => a.id === id))
+      .filter(Boolean);
+  }, [profile]);
   const source = thinkResult?.source ?? "fallback";
 
   const transformedThought = useMemo(() => {
@@ -405,13 +440,13 @@ export default function Page() {
                 stage === "artifacts" ||
                 stage === "mirror" ||
                 stage === "exit") && (
-                <div style={{ display: "grid", gap: "1rem" }}>
-                  <WordMorph text={normalizedThought} />
-                  <p style={{ color: "rgba(245,241,227,0.34)", textTransform: "uppercase", letterSpacing: "0.32em", fontSize: "0.72rem", margin: 0 }}>
-                    This is what you think.
-                  </p>
-                </div>
-              )}
+                  <div style={{ display: "grid", gap: "1rem" }}>
+                    <WordMorph text={normalizedThought} />
+                    <p style={{ color: "rgba(245,241,227,0.34)", textTransform: "uppercase", letterSpacing: "0.32em", fontSize: "0.72rem", margin: 0 }}>
+                      This is what you think.
+                    </p>
+                  </div>
+                )}
 
               {(stage === "interpretation" ||
                 stage === "friction" ||
@@ -421,13 +456,13 @@ export default function Page() {
                 stage === "artifacts" ||
                 stage === "mirror" ||
                 stage === "exit") && (
-                <div style={{ maxWidth: "32ch", paddingTop: "0.5rem" }}>
-                  <p style={{ margin: 0, fontSize: "clamp(1.15rem,2.2vw,2.1rem)", color: "rgba(245,241,227,0.42)", lineHeight: 1.45 }}>{interpretedThought}</p>
-                  <p style={{ marginTop: "0.75rem", color: "rgba(245,241,227,0.28)", textTransform: "uppercase", letterSpacing: "0.32em", fontSize: "0.72rem" }}>
-                    This is already different.
-                  </p>
-                </div>
-              )}
+                  <div style={{ maxWidth: "32ch", paddingTop: "0.5rem" }}>
+                    <p style={{ margin: 0, fontSize: "clamp(1.15rem,2.2vw,2.1rem)", color: "rgba(245,241,227,0.42)", lineHeight: 1.45 }}>{interpretedThought}</p>
+                    <p style={{ marginTop: "0.75rem", color: "rgba(245,241,227,0.28)", textTransform: "uppercase", letterSpacing: "0.32em", fontSize: "0.72rem" }}>
+                      This is already different.
+                    </p>
+                  </div>
+                )}
 
               {(stage === "friction" ||
                 stage === "expansion" ||
@@ -436,28 +471,28 @@ export default function Page() {
                 stage === "artifacts" ||
                 stage === "mirror" ||
                 stage === "exit") && (
-                <div style={{ position: "relative", minHeight: "220px", paddingTop: "1rem" }}>
-                  {frictionLines.map((line, index) => (
-                    <p
-                      key={line}
-                      style={{
-                        position: "absolute",
-                        color: isHolding ? "rgba(245,241,227,0.18)" : "rgba(245,241,227,0.34)",
-                        fontSize: "0.96rem",
-                        letterSpacing: "0.08em",
-                        lineHeight: 1.65,
-                        left: index === 0 ? "4%" : index === 2 ? "20%" : "auto",
-                        right: index === 1 ? "8%" : "auto",
-                        top: index === 0 ? "0.25rem" : index === 1 ? "4.25rem" : "9.5rem",
-                        maxWidth: index === 1 ? "18ch" : index === 2 ? "24ch" : undefined,
-                        textAlign: index === 1 ? "right" : "left",
-                      }}
-                    >
-                      {line}
-                    </p>
-                  ))}
-                </div>
-              )}
+                  <div style={{ position: "relative", minHeight: "220px", paddingTop: "1rem" }}>
+                    {frictionLines.map((line, index) => (
+                      <p
+                        key={line}
+                        style={{
+                          position: "absolute",
+                          color: isHolding ? "rgba(245,241,227,0.18)" : "rgba(245,241,227,0.34)",
+                          fontSize: "0.96rem",
+                          letterSpacing: "0.08em",
+                          lineHeight: 1.65,
+                          left: index === 0 ? "4%" : index === 2 ? "20%" : "auto",
+                          right: index === 1 ? "8%" : "auto",
+                          top: index === 0 ? "0.25rem" : index === 1 ? "4.25rem" : "9.5rem",
+                          maxWidth: index === 1 ? "18ch" : index === 2 ? "24ch" : undefined,
+                          textAlign: index === 1 ? "right" : "left",
+                        }}
+                      >
+                        {line}
+                      </p>
+                    ))}
+                  </div>
+                )}
 
               {(stage === "expansion" ||
                 stage === "transformation" ||
@@ -465,24 +500,24 @@ export default function Page() {
                 stage === "artifacts" ||
                 stage === "mirror" ||
                 stage === "exit") && (
-                <div style={{ display: "grid", gap: "1rem", paddingTop: "0.5rem" }}>
-                  {expansionLines.map((line) => (
-                    <p key={line} style={{ maxWidth: "30ch", fontSize: "clamp(1.35rem,2.6vw,3rem)", color: "rgba(245,241,227,0.8)", margin: 0 }}>
-                      {line}
-                    </p>
-                  ))}
-                </div>
-              )}
+                  <div style={{ display: "grid", gap: "1rem", paddingTop: "0.5rem" }}>
+                    {expansionLines.map((line) => (
+                      <p key={line} style={{ maxWidth: "30ch", fontSize: "clamp(1.35rem,2.6vw,3rem)", color: "rgba(245,241,227,0.8)", margin: 0 }}>
+                        {line}
+                      </p>
+                    ))}
+                  </div>
+                )}
 
               {(stage === "transformation" ||
                 stage === "bridge" ||
                 stage === "artifacts" ||
                 stage === "mirror" ||
                 stage === "exit") && (
-                <div style={{ paddingTop: "0.75rem" }}>
-                  <WordMorph text={transformedThought} />
-                </div>
-              )}
+                  <div style={{ paddingTop: "0.75rem" }}>
+                    <WordMorph text={transformedThought} />
+                  </div>
+                )}
 
               {stage === "bridge" && (
                 <p style={{ color: "rgba(245,241,227,0.32)", textTransform: "uppercase", letterSpacing: "0.32em", fontSize: "0.76rem", paddingTop: "0.75rem", margin: 0 }}>
@@ -516,16 +551,16 @@ export default function Page() {
               </div>
 
               <div style={{ position: "relative", zIndex: 2 }}>
-                {artifacts.slice(0, artifactIndex + 1).map((artifact) => (
-                  <div
-                    key={artifact.id}
-                    onMouseEnter={() => setHoverArtifact(artifact.id)}
-                    onMouseLeave={() => setHoverArtifact(null)}
-                    onFocus={() => setHoverArtifact(artifact.id)}
-                    onBlur={() => setHoverArtifact(null)}
-                  >
-                    <ArtifactEcho artifact={artifact} />
-                  </div>
+                prioritizedArtifacts.slice(0, artifactIndex + 1).map((artifact) => (
+                <div
+                  key={artifact.id}
+                  onMouseEnter={() => setHoverArtifact(artifact.id)}
+                  onMouseLeave={() => setHoverArtifact(null)}
+                  onFocus={() => setHoverArtifact(artifact.id)}
+                  onBlur={() => setHoverArtifact(null)}
+                >
+                  <ArtifactEcho artifact={artifact} />
+                </div>
                 ))}
               </div>
             </section>

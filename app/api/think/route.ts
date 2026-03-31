@@ -16,9 +16,13 @@ type ThinkResult = {
   friction: string[];
   expansion: string[];
   transformation: string;
+  debug?: string;
 };
 
-const adaptiveBanks: Record<ThoughtProfile, { friction: string[]; expansion: string[] }> = {
+const adaptiveBanks: Record<
+  ThoughtProfile,
+  { friction: string[]; expansion: string[] }
+> = {
   ambition: {
     friction: [
       "Do you want to build it — or be recognized for it?",
@@ -127,14 +131,18 @@ function classifyThought(input: string): ThoughtProfile {
     lower.includes("faster") ||
     lower.includes("productivity") ||
     lower.includes("optimi")
-  ) return "efficiency";
+  ) {
+    return "efficiency";
+  }
 
   if (
     lower.includes("meaning") ||
     lower.includes("meaningful") ||
     lower.includes("purpose") ||
     lower.includes("matter")
-  ) return "meaning";
+  ) {
+    return "meaning";
+  }
 
   if (
     lower.includes("brand") ||
@@ -143,7 +151,9 @@ function classifyThought(input: string): ThoughtProfile {
     lower.includes("visible") ||
     lower.includes("reputation") ||
     lower.includes("seen")
-  ) return "identity";
+  ) {
+    return "identity";
+  }
 
   if (
     lower.includes("afraid") ||
@@ -152,7 +162,9 @@ function classifyThought(input: string): ThoughtProfile {
     lower.includes("safe") ||
     lower.includes("security") ||
     lower.includes("uncertain")
-  ) return "fear";
+  ) {
+    return "fear";
+  }
 
   if (
     lower.includes("build") ||
@@ -161,7 +173,9 @@ function classifyThought(input: string): ThoughtProfile {
     lower.includes("write") ||
     lower.includes("design") ||
     lower.includes("compose")
-  ) return "creation";
+  ) {
+    return "creation";
+  }
 
   if (
     lower.includes("grow") ||
@@ -170,7 +184,9 @@ function classifyThought(input: string): ThoughtProfile {
     lower.includes("win") ||
     lower.includes("success") ||
     lower.includes("launch")
-  ) return "ambition";
+  ) {
+    return "ambition";
+  }
 
   return "default";
 }
@@ -179,16 +195,27 @@ function reinterpretThought(input: string): string {
   const lower = input.toLowerCase();
   const profile = classifyThought(input);
 
-  if (lower.includes("meaningful")) return "You want to avoid being irrelevant.";
+  if (lower.includes("meaningful")) {
+    return "You want to avoid being irrelevant.";
+  }
+
   if (lower.includes("ai") || lower.includes("artificial intelligence")) {
-    if (profile === "efficiency") return "You may be using AI to remove friction before understanding it.";
-    if (profile === "identity") return "You may be using AI to stabilize how you want to be seen.";
+    if (profile === "efficiency") {
+      return "You may be using AI to remove friction before understanding it.";
+    }
+    if (profile === "identity") {
+      return "You may be using AI to stabilize how you want to be seen.";
+    }
     return "You may be using AI to make the thought feel more important.";
   }
+
   if (lower.startsWith("i want to ")) {
-    if (profile === "ambition") return input.replace(/^I want to /i, "You feel pressure to ");
+    if (profile === "ambition") {
+      return input.replace(/^I want to /i, "You feel pressure to ");
+    }
     return input.replace(/^I want to /i, "You feel the need to ");
   }
+
   if (lower.startsWith("i need to ")) {
     return input.replace(/^I need to /i, "You don’t trust that you already can ");
   }
@@ -200,22 +227,52 @@ function transformThought(input: string): string {
   const lower = input.toLowerCase();
   const profile = classifyThought(input);
 
-  if (lower.includes("meaningful") && (lower.includes("ai") || lower.includes("artificial intelligence"))) {
+  if (
+    lower.includes("meaningful") &&
+    (lower.includes("ai") || lower.includes("artificial intelligence"))
+  ) {
     return "I want to understand why I need AI to feel meaningful.";
   }
-  if (profile === "efficiency") return "I want to understand what speed is preventing me from seeing.";
-  if (profile === "identity") return "I want to understand how much of this thought is performance.";
-  if (profile === "fear") return "I want to understand what this thought is trying to keep safe.";
-  if (profile === "ambition") return "I want to understand whether this is ambition or borrowed momentum.";
-  if (profile === "creation") return "I want to understand what wants to be made before I make it.";
+
+  if (profile === "efficiency") {
+    return "I want to understand what speed is preventing me from seeing.";
+  }
+
+  if (profile === "identity") {
+    return "I want to understand how much of this thought is performance.";
+  }
+
+  if (profile === "fear") {
+    return "I want to understand what this thought is trying to keep safe.";
+  }
+
+  if (profile === "ambition") {
+    return "I want to understand whether this is ambition or borrowed momentum.";
+  }
+
+  if (profile === "creation") {
+    return "I want to understand what wants to be made before I make it.";
+  }
+
   if (lower.startsWith("i want to build")) {
-    return input.replace(/^I want to build/i, "I want to understand why I need to build");
+    return input.replace(
+      /^I want to build/i,
+      "I want to understand why I need to build",
+    );
   }
+
   if (lower.startsWith("i want to ")) {
-    return input.replace(/^I want to /i, "I want to understand why I want to ");
+    return input.replace(
+      /^I want to /i,
+      "I want to understand why I want to ",
+    );
   }
+
   if (lower.startsWith("i need to ")) {
-    return input.replace(/^I need to /i, "I want to understand why I feel I need to ");
+    return input.replace(
+      /^I need to /i,
+      "I want to understand why I feel I need to ",
+    );
   }
 
   return "I want to understand what this thought is protecting.";
@@ -237,6 +294,7 @@ function pickLines(input: string, bank: string[], count: number): string[] {
 function buildFallback(input: string): ThinkResult {
   const profile = classifyThought(input);
   const bank = adaptiveBanks[profile] ?? adaptiveBanks.default;
+
   return {
     source: "fallback",
     profile,
@@ -250,7 +308,10 @@ function buildFallback(input: string): ThinkResult {
 async function buildWithGpt(input: string): Promise<ThinkResult> {
   const apiKey = process.env.OPENAI_API_KEY;
   const model = process.env.OPENAI_MODEL || "gpt-4.1-mini";
-  if (!apiKey) throw new Error("Missing OPENAI_API_KEY");
+
+  if (!apiKey) {
+    throw new Error("Missing OPENAI_API_KEY");
+  }
 
   const prompt = `
 You are not an assistant.
@@ -336,16 +397,11 @@ Input:
 ${JSON.stringify(input)}
 `;
 
-  Input:
-${ JSON.stringify(input) }
-  `;
-- Input thought: ${JSON.stringify(input)}`;
-
   const response = await fetch("https://api.openai.com/v1/responses", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
-      "Authorization": `Bearer ${apiKey}`,
+      Authorization: `Bearer ${apiKey}`,
     },
     body: JSON.stringify({
       model,
@@ -354,13 +410,22 @@ ${ JSON.stringify(input) }
         format: {
           type: "json_schema",
           name: "thinking_interface_response",
+          strict: true,
           schema: {
             type: "object",
             additionalProperties: false,
             properties: {
               profile: {
                 type: "string",
-                enum: ["ambition", "identity", "efficiency", "meaning", "fear", "creation", "default"],
+                enum: [
+                  "ambition",
+                  "identity",
+                  "efficiency",
+                  "meaning",
+                  "fear",
+                  "creation",
+                  "default",
+                ],
               },
               interpretation: { type: "string" },
               friction: {
@@ -377,11 +442,16 @@ ${ JSON.stringify(input) }
               },
               transformation: { type: "string" },
             },
-            required: ["profile", "interpretation", "friction", "expansion", "transformation"],
+            required: [
+              "profile",
+              "interpretation",
+              "friction",
+              "expansion",
+              "transformation",
+            ],
           },
-          strict: true
-        }
-      }
+        },
+      },
     }),
   });
 
@@ -390,11 +460,14 @@ ${ JSON.stringify(input) }
   }
 
   const data = await response.json();
-  const content = data?.output?.[0]?.content?.[0];
-  const text = content?.text;
-  if (!text) throw new Error("No structured response content returned from OpenAI");
+  const text = data?.output?.[0]?.content?.[0]?.text;
+
+  if (!text) {
+    throw new Error("No structured response content returned from OpenAI");
+  }
 
   const parsed = JSON.parse(text) as Omit<ThinkResult, "source">;
+
   return {
     source: "gpt",
     ...parsed,
@@ -416,7 +489,11 @@ export async function POST(request: Request) {
       return NextResponse.json(result);
     } catch (error) {
       console.error("🔥 OpenAI ERROR:", error);
-      return NextResponse.json(buildFallback(input));
+
+      return NextResponse.json({
+        ...buildFallback(input),
+        debug: error instanceof Error ? error.message : "unknown error",
+      });
     }
   } catch {
     return NextResponse.json(

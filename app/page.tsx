@@ -158,31 +158,43 @@ function useStageTimeline(active: boolean, paused: boolean) {
 }
 
 function WordMorph({ text }: { text: string }) {
-  const words = text.split(" ");
+  const blocks = text.split("\n");
+
   return (
-    <p style={{
-      maxWidth: "16ch",
-      fontSize: "clamp(2rem, 4.2vw, 4.25rem)",
-      lineHeight: 1.15,
-      letterSpacing: "-0.03em",
-      margin: 0,
-      fontWeight: 560,
-    }}>
-      {words.map((word, index) => (
-        <span
-          key={`${word}-${index}`}
-          style={{
-            display: "inline-block",
-            marginRight: "0.28em",
-            opacity: 1,
-            transform: "translateY(0)",
-            transition: `all 500ms cubic-bezier(.22,1,.36,1) ${index * 60}ms`,
-          }}
-        >
-          {word}
-        </span>
-      ))}
-    </p>
+    <div style={{ display: "grid", gap: "0.6rem" }}>
+      {blocks.map((block, blockIndex) => {
+        const words = block.split(" ");
+        return (
+          <p
+            key={`${block}-${blockIndex}`}
+            style={{
+              maxWidth: "18ch",
+              fontSize: "clamp(2rem, 4.2vw, 4.25rem)",
+              lineHeight: 1.15,
+              letterSpacing: "-0.03em",
+              margin: 0,
+              fontWeight: blockIndex === 0 ? 560 : 420,
+              color: blockIndex === 0 ? "#f5f1e3" : "rgba(245,241,227,0.72)",
+            }}
+          >
+            {words.map((word, index) => (
+              <span
+                key={`${word}-${index}-${blockIndex}`}
+                style={{
+                  display: "inline-block",
+                  marginRight: "0.28em",
+                  opacity: 1,
+                  transform: "translateY(0)",
+                  transition: `all 500ms cubic-bezier(.22,1,.36,1) ${index * 60}ms`,
+                }}
+              >
+                {word}
+              </span>
+            ))}
+          </p>
+        );
+      })}
+    </div>
   );
 }
 
@@ -285,12 +297,24 @@ export default function Page() {
   const source = thinkResult?.source ?? "fallback";
 
   const transformedThought = useMemo(() => {
-    if (!hoverArtifact) return transformedThoughtBase;
-    if (hoverArtifact === "sinfrey") return transformedThoughtBase.replace("meaningful", "visible");
-    if (hoverArtifact === "art-kolar") return transformedThoughtBase.replace("understand", "question");
-    if (hoverArtifact === "albums") return transformedThoughtBase.replace("AI", "a machine");
+    const activeArtifactId = hoverArtifact ?? prioritizedArtifacts[0]?.id;
+    if (!activeArtifactId) return transformedThoughtBase;
+
+    if (activeArtifactId === "sinfrey") {
+      return `${transformedThoughtBase}\n\nMaybe visibility is doing more work here than truth.`;
+    }
+    if (activeArtifactId === "art-kolar") {
+      return `${transformedThoughtBase}\n\nMaybe what you call meaning is really a way of being seen differently.`;
+    }
+    if (activeArtifactId === "albums") {
+      return `${transformedThoughtBase}\n\nMaybe the structure matters more than the output.`;
+    }
+    if (activeArtifactId === "andreas-kolar") {
+      return `${transformedThoughtBase}\n\nMaybe coherence is not the goal. Maybe trace is enough.`;
+    }
+
     return transformedThoughtBase;
-  }, [hoverArtifact, transformedThoughtBase]);
+  }, [hoverArtifact, prioritizedArtifacts, transformedThoughtBase]);
 
   const { stage, artifactIndex, setStage, setArtifactIndex } = useStageTimeline(
     experienceStarted && !!thinkResult,
@@ -539,6 +563,17 @@ export default function Page() {
                 </p>
                 <p style={{ marginTop: "0.75rem", textTransform: "uppercase", letterSpacing: "0.26em", fontSize: "0.7rem", color: "rgba(245,241,227,0.22)" }}>
                   adaptive profile: {profile} · source: {source}
+                  <p
+                    style={{
+                      marginTop: "0.55rem",
+                      textTransform: "uppercase",
+                      letterSpacing: "0.22em",
+                      fontSize: "0.68rem",
+                      color: "rgba(0,166,118,0.78)",
+                    }}
+                  >
+                    first resonance: {prioritizedArtifacts[0]?.id ?? "none"}
+                  </p>
                 </p>
               </div>
 

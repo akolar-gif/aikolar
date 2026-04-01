@@ -719,6 +719,20 @@ export default function Page() {
               </div>
             </div>
           </section>
+          <div
+            style={{
+              position: "fixed",
+              bottom: "1.2rem",
+              left: "1.5rem",
+              fontSize: "0.75rem",
+              color: "rgba(245,241,227,0.18)",
+              letterSpacing: "0.08em",
+              pointerEvents: "none",
+              userSelect: "none",
+            }}
+          >
+            stay with the question
+          </div>
         </div>
       )}
     </main>

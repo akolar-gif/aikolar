@@ -172,7 +172,11 @@ function classifyThought(input: string): ThoughtProfile {
     lower.includes("create") ||
     lower.includes("write") ||
     lower.includes("design") ||
-    lower.includes("compose")
+    lower.includes("compose") ||
+    lower.includes("art") ||
+    lower.includes("artist") ||
+    lower.includes("creative") ||
+    lower.includes("creativity")
   ) {
     return "creation";
   }
@@ -217,7 +221,10 @@ function reinterpretThought(input: string): string {
   }
 
   if (lower.startsWith("i need to ")) {
-    return input.replace(/^I need to /i, "You don’t trust that you already can ");
+    return input.replace(
+      /^I need to /i,
+      "You don’t trust that you already can ",
+    );
   }
 
   return "This sounds like a conclusion pretending to be a thought.";
@@ -279,7 +286,10 @@ function transformThought(input: string): string {
 }
 
 function pickLines(input: string, bank: string[], count: number): string[] {
-  const hash = Array.from(input).reduce((acc, char) => acc + char.charCodeAt(0), 0);
+  const hash = Array.from(input).reduce(
+    (acc, char) => acc + char.charCodeAt(0),
+    0,
+  );
   const start = hash % bank.length;
   const picked: string[] = [];
 

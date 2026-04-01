@@ -144,8 +144,8 @@ function ArtifactCard({
         justifyContent: "center",
         gap: "2rem",
         padding: "4rem 1.5rem",
-        opacity: isPrimary ? 1 : 0.42,
-        transform: isPrimary ? "scale(1)" : "scale(0.965)",
+        opacity: isPrimary ? 1 : 0.72,
+        transform: isPrimary ? "scale(1)" : "scale(0.985)",
         transition:
           "opacity 700ms cubic-bezier(.22,1,.36,1), transform 700ms cubic-bezier(.22,1,.36,1), border-color 700ms cubic-bezier(.22,1,.36,1), background 700ms cubic-bezier(.22,1,.36,1)",
         borderLeft: isPrimary
@@ -155,14 +155,14 @@ function ArtifactCard({
         background: isPrimary ? "rgba(255,255,255,0.02)" : "transparent",
       }}
     >
-      <div style={{ display: "grid", gap: "1.5rem", opacity: isPrimary ? 1 : 0.62 }}>
+      <div style={{ display: "grid", gap: "1.5rem", opacity: isPrimary ? 1 : 0.8 }}>
         <p
           style={{
             maxWidth: "17ch",
             fontSize: "clamp(1.8rem,3.5vw,4rem)",
             lineHeight: 1.16,
             margin: 0,
-            color: isPrimary ? "#f5f1e3" : "rgba(245,241,227,0.52)",
+            color: isPrimary ? "#f5f1e3" : "rgba(245,241,227,0.72)",
           }}
         >
           {artifact.initial}
@@ -185,7 +185,7 @@ function ArtifactCard({
             fontSize: "clamp(1.3rem,2.6vw,2.8rem)",
             color: isPrimary
               ? "rgba(245,241,227,0.92)"
-              : "rgba(245,241,227,0.38)",
+              : "rgba(245,241,227,0.6)",
             lineHeight: 1.28,
             margin: 0,
           }}
@@ -309,18 +309,41 @@ export default function Page() {
 
   async function run() {
     const nextThought = normalizeInput(inputValue);
+
     setCommittedThought(nextThought);
 
-    const response = await fetch("/api/think", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ input: nextThought }),
+    // 👉 sofort visuelles Feedback (kein "nichts passiert" Moment)
+    setResult({
+      source: "fallback",
+      profile: "default",
+      interpretation: "This thought is still forming",
+      friction: [],
+      expansion: [],
+      transformation: "Wait.",
     });
 
-    const data = (await response.json()) as ThinkResult;
-    setResult(data);
+    try {
+      const response = await fetch("/api/think", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ input: nextThought }),
+      });
+
+      const data = await response.json();
+      setResult(data);
+    } catch {
+      // optional fallback
+      setResult({
+        source: "fallback",
+        profile: "default",
+        interpretation: "Something interrupted the thought.",
+        friction: [],
+        expansion: [],
+        transformation: "Try again.",
+      });
+    }
   }
 
   return (
@@ -350,6 +373,14 @@ export default function Page() {
           <input
             value={inputValue}
             onChange={(e) => setInputValue(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === "Enter") {
+                e.preventDefault();
+                if (inputValue.trim()) {
+                  run();
+                }
+              }
+            }}
             placeholder="start with a thought"
             style={{
               width: "100%",
@@ -362,6 +393,7 @@ export default function Page() {
               outline: "none",
             }}
           />
+
 
           <button
             type="button"
@@ -510,6 +542,9 @@ export default function Page() {
             </p>
 
             <div style={{ marginTop: "2rem" }}>
+              <p style={{ color: "red" }}>
+                ORDER: {prioritizedArtifacts.map((a) => a.id).join(" → ")}
+              </p>
               {prioritizedArtifacts.map((artifact) => (
                 <ArtifactCard
                   key={artifact.id}

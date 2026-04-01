@@ -630,9 +630,7 @@ export default function Page() {
               </div>
             </div>
             <div style={{ marginTop: "2rem" }}>
-              <p style={{ color: "red" }}>
-                ORDER: {prioritizedArtifacts.map((a) => a.id).join(" → ")}
-              </p>
+
               {prioritizedArtifacts.map((artifact) => (
                 <ArtifactCard
                   key={artifact.id}

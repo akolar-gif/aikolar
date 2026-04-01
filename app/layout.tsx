@@ -2,23 +2,27 @@ import "./globals.css";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Thinking, Interrupted",
-  description: "A minimal experimental interface about how thinking changes when working with AI.",
-  metadataBase: new URL("https://ai.kolar.berlin"),
-  alternates: {
-    canonical: "/",
-  },
+  title: "AI Kolar",
+  description: "A thinking interface. Not a portfolio.",
   openGraph: {
-    title: "Thinking, Interrupted",
-    description: "This is not a portfolio. It is a thinking interface.",
+    title: "This is already different.",
+    description: "A thinking interface.",
     url: "https://ai.kolar.berlin",
-    siteName: "Thinking, Interrupted",
+    siteName: "AI Kolar",
+    images: [
+      {
+        url: "https://ai.kolar.berlin/og.jpg",
+        width: 1200,
+        height: 630,
+      },
+    ],
     type: "website",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Thinking, Interrupted",
-    description: "This is not a portfolio. It is a thinking interface.",
+    title: "This is already different.",
+    description: "A thinking interface.",
+    images: ["https://ai.kolar.berlin/og.jpg"],
   },
 };
 

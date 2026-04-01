@@ -393,6 +393,17 @@ Rules:
 Profiles must be one of:
 ambition, identity, efficiency, meaning, fear, creation, default
 
+Profile guidance:
+- creation = wanting to make, write, compose, design, create, become an artist, become more creative, express something, or produce original work
+- identity = wanting to be seen, recognized, positioned, perceived differently, become visible, build a reputation, or shape how others see you
+- efficiency = wanting speed, productivity, optimisation, less friction, or faster execution
+- meaning = wanting significance, purpose, relevance, or a sense that something matters
+- fear = wanting safety, certainty, protection, or avoiding loss/failure
+- ambition = wanting growth, scale, winning, launch, status, or external success
+
+Important:
+If a thought could be both identity and creation, but it clearly points toward artistic expression, classify it as creation.
+
 Return ONLY valid JSON:
 
 {
@@ -477,6 +488,18 @@ ${JSON.stringify(input)}
   }
 
   const parsed = JSON.parse(text) as Omit<ThinkResult, "source">;
+
+  const lower = input.toLowerCase();
+
+  if (
+    (lower.includes("artist") ||
+      lower.includes("art") ||
+      lower.includes("creative") ||
+      lower.includes("creativity")) &&
+    parsed.profile === "identity"
+  ) {
+    parsed.profile = "creation";
+  }
 
   return {
     source: "gpt",

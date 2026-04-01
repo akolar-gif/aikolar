@@ -494,7 +494,7 @@ export default function Page() {
                 whiteSpace: "pre-line",
               }}
             >
-              {semanticinterpretation}
+              {semanticInterpretation}
             </p>
             <p
               style={{

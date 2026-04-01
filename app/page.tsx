@@ -733,6 +733,20 @@ export default function Page() {
           >
             stay with the question
           </div>
+          <a
+            href="/legal"
+            style={{
+              position: "fixed",
+              bottom: "1.2rem",
+              right: "1.5rem",
+              fontSize: "0.75rem",
+              color: "rgba(245,241,227,0.18)",
+              letterSpacing: "0.08em",
+              textDecoration: "none",
+            }}
+          >
+            legal
+          </a>
         </div>
       )}
     </main>

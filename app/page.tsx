@@ -330,6 +330,33 @@ export default function Page() {
 
     return transformedBase;
   }, [hoverArtifact, prioritizedArtifacts, result?.transformation]);
+  const semanticInterpretation = useMemo(() => {
+    const base =
+      result?.interpretation ??
+      "You may be using AI to make the thought feel more important.";
+
+    const activeArtifactId = hoverArtifact ?? prioritizedArtifacts[0]?.id;
+
+    if (!activeArtifactId) return base;
+
+    if (activeArtifactId === "art-kolar") {
+      return `${base}\n\nMaybe this is less about output than about perception.`;
+    }
+
+    if (activeArtifactId === "sinfrey") {
+      return `${base}\n\nMaybe what matters here is not the thing, but how it is received.`;
+    }
+
+    if (activeArtifactId === "albums") {
+      return `${base}\n\nMaybe the sequence is doing more work than the result.`;
+    }
+
+    if (activeArtifactId === "andreas-kolar") {
+      return `${base}\n\nMaybe a trace is enough. Maybe coherence is not required.`;
+    }
+
+    return base;
+  }, [hoverArtifact, prioritizedArtifacts, result?.interpretation]);
   const backgroundIntensity = hoverArtifact ? 1 : 0;
 
   async function run() {
@@ -467,7 +494,7 @@ export default function Page() {
                 whiteSpace: "pre-line",
               }}
             >
-              {result.interpretation}
+              {semanticinterpretation}
             </p>
             <p
               style={{

@@ -118,11 +118,13 @@ function WordMorph({ text }: { text: string }) {
 function ArtifactCard({
   artifact,
   isPrimary,
+  isHovered,
   onEnter,
   onLeave,
 }: {
   artifact: Artifact;
   isPrimary: boolean;
+  isHovered: boolean;
   onEnter: () => void;
   onLeave: () => void;
 }) {
@@ -144,18 +146,40 @@ function ArtifactCard({
         justifyContent: "center",
         gap: "2rem",
         padding: "4rem 1.5rem",
-        opacity: isPrimary ? 1 : 0.72,
-        transform: isPrimary ? "scale(1)" : "scale(0.985)",
+        opacity: isPrimary ? 1 : isHovered ? 0.9 : 0.72,
+        transform: isPrimary
+          ? isHovered
+            ? "translateY(-4px) scale(1.01)"
+            : "translateY(0) scale(1)"
+          : isHovered
+            ? "translateY(-3px) scale(0.995)"
+            : "translateY(0) scale(0.985)",
         transition:
-          "opacity 700ms cubic-bezier(.22,1,.36,1), transform 700ms cubic-bezier(.22,1,.36,1), border-color 700ms cubic-bezier(.22,1,.36,1), background 700ms cubic-bezier(.22,1,.36,1)",
+          "opacity 500ms cubic-bezier(.22,1,.36,1), transform 500ms cubic-bezier(.22,1,.36,1), border-color 500ms cubic-bezier(.22,1,.36,1), background 500ms cubic-bezier(.22,1,.36,1), box-shadow 500ms cubic-bezier(.22,1,.36,1)",
         borderLeft: isPrimary
           ? "2px solid rgba(0,166,118,0.9)"
-          : "2px solid transparent",
+          : isHovered
+            ? "2px solid rgba(245,241,227,0.22)"
+            : "2px solid transparent",
         paddingLeft: isPrimary ? "1.8rem" : "1.5rem",
-        background: isPrimary ? "rgba(255,255,255,0.02)" : "transparent",
+        background: isPrimary
+          ? "rgba(255,255,255,0.02)"
+          : isHovered
+            ? "rgba(255,255,255,0.015)"
+            : "transparent",
+        boxShadow: isHovered
+          ? "0 10px 30px rgba(0,0,0,0.22)"
+          : "0 0 0 rgba(0,0,0,0)",
       }}
     >
-      <div style={{ display: "grid", gap: "1.5rem", opacity: isPrimary ? 1 : 0.8 }}>
+      <div
+        style={{
+          display: "grid",
+          gap: "1.5rem",
+          opacity: isPrimary ? 1 : isHovered ? 0.92 : 0.8,
+          transition: "opacity 500ms cubic-bezier(.22,1,.36,1)",
+        }}
+      >
         <p
           style={{
             maxWidth: "17ch",
@@ -550,6 +574,7 @@ export default function Page() {
                   key={artifact.id}
                   artifact={artifact}
                   isPrimary={artifact.id === prioritizedArtifacts[0]?.id}
+                  isHovered={hoverArtifact === artifact.id}
                   onEnter={() => setHoverArtifact(artifact.id)}
                   onLeave={() => setHoverArtifact(null)}
                 />

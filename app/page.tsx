@@ -564,7 +564,40 @@ export default function Page() {
             >
               first resonance: {prioritizedArtifacts[0]?.id ?? "none"}
             </p>
-
+            <div
+              style={{
+                pointerEvents: "none",
+                position: "absolute",
+                inset: 0,
+              }}
+            >
+              <div
+                style={{
+                  position: "sticky",
+                  top: 0,
+                  minHeight: "100vh",
+                  display: "flex",
+                  alignItems: "center",
+                  maxWidth: "1100px",
+                  margin: "0 auto",
+                  padding: "0 1.5rem",
+                }}
+              >
+                <p
+                  style={{
+                    maxWidth: "26ch",
+                    fontSize: "clamp(2.4rem,4.2vw,5rem)",
+                    color: "rgba(245,241,227,0.09)",
+                    lineHeight: 1.08,
+                    letterSpacing: "-0.04em",
+                    filter: "blur(1px)",
+                    whiteSpace: "pre-line",
+                  }}
+                >
+                  {transformedThought}
+                </p>
+              </div>
+            </div>
             <div style={{ marginTop: "2rem" }}>
               <p style={{ color: "red" }}>
                 ORDER: {prioritizedArtifacts.map((a) => a.id).join(" → ")}

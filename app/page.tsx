@@ -330,6 +330,7 @@ export default function Page() {
 
     return transformedBase;
   }, [hoverArtifact, prioritizedArtifacts, result?.transformation]);
+  const backgroundIntensity = hoverArtifact ? 1 : 0;
 
   async function run() {
     const nextThought = normalizeInput(inputValue);
@@ -587,11 +588,14 @@ export default function Page() {
                   style={{
                     maxWidth: "26ch",
                     fontSize: "clamp(2.4rem,4.2vw,5rem)",
-                    color: "rgba(245,241,227,0.09)",
+                    color: `rgba(245,241,227,${0.08 + backgroundIntensity * 0.05})`,
                     lineHeight: 1.08,
                     letterSpacing: "-0.04em",
-                    filter: "blur(1px)",
                     whiteSpace: "pre-line",
+                    filter: `blur(${1 - backgroundIntensity * 0.6}px)`,
+                    transform: `translateY(${backgroundIntensity * -6}px)`,
+                    transition:
+                      "transform 900ms cubic-bezier(.22,1,.36,1), filter 900ms cubic-bezier(.22,1,.36,1), color 900ms cubic-bezier(.22,1,.36,1)",
                   }}
                 >
                   {transformedThought}

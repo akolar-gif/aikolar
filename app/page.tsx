@@ -144,7 +144,7 @@ function ArtifactCard({
         display: "flex",
         flexDirection: "column",
         justifyContent: "center",
-        gap: "2rem",
+        gap: "1.4rem",
         padding: "4rem 1.5rem",
         opacity: isPrimary ? 1 : isHovered ? 0.9 : 0.72,
         transform: isPrimary
@@ -174,106 +174,92 @@ function ArtifactCard({
     >
       <div
         style={{
-          display: "grid",
-          gap: "1.5rem",
-          opacity: isPrimary ? 1 : isHovered ? 0.92 : 0.8,
-          transition: "opacity 500ms cubic-bezier(.22,1,.36,1)",
+          fontSize: "0.8rem",
+          letterSpacing: "0.24em",
+          textTransform: "uppercase",
+          color: isPrimary
+            ? "rgba(0,166,118,0.9)"
+            : "rgba(245,241,227,0.5)",
         }}
       >
-        <p
-          style={{
-            maxWidth: "17ch",
-            fontSize: "clamp(1.8rem,3.5vw,4rem)",
-            lineHeight: 1.16,
-            margin: 0,
-            color: isPrimary ? "#f5f1e3" : "rgba(245,241,227,0.72)",
-          }}
-        >
-          {artifact.initial}
-        </p>
-        <p
-          style={{
-            maxWidth: "32ch",
-            fontSize: "clamp(1rem,1.9vw,1.4rem)",
-            color: isPrimary
-              ? "rgba(245,241,227,0.42)"
-              : "rgba(245,241,227,0.3)",
-            margin: 0,
-          }}
-        >
-          {artifact.distortion}
-        </p>
-        <p
-          style={{
-            maxWidth: "26ch",
-            fontSize: "clamp(1.3rem,2.6vw,2.8rem)",
-            color: isPrimary
-              ? "rgba(245,241,227,0.92)"
-              : "rgba(245,241,227,0.6)",
-            lineHeight: 1.28,
-            margin: 0,
-          }}
-        >
-          {artifact.shift}
-        </p>
+        {isPrimary ? "first resonance" : "artifact"}
       </div>
 
-      <div style={{ paddingTop: "0.6rem", maxWidth: "35rem", opacity: isPrimary ? 1 : 0.72 }}>
-        <div
-          style={{
-            display: "flex",
-            alignItems: "center",
-            gap: "0.5rem",
-            marginBottom: "1rem",
-          }}
-        >
-          <p
-            style={{
-              textTransform: "uppercase",
-              letterSpacing: "0.24em",
-              fontSize: "0.72rem",
-              color: isPrimary ? "#00A676" : "rgba(245,241,227,0.3)",
-              margin: 0,
-            }}
-          >
-            {isPrimary ? "first resonance" : "artifact"}
-          </p>
-          {isPrimary ? (
-            <span
-              style={{
-                height: 1,
-                width: 48,
-                background: "rgba(0,166,118,0.65)",
-                display: "block",
-              }}
-            />
-          ) : null}
-        </div>
+      <p
+        style={{
+          maxWidth: "17ch",
+          fontSize: "clamp(1.8rem,3.5vw,4rem)",
+          lineHeight: 1.16,
+          margin: 0,
+          color: isPrimary ? "#f5f1e3" : "rgba(245,241,227,0.72)",
+        }}
+      >
+        {artifact.initial}
+      </p>
 
-        <p style={{ margin: 0, color: "rgba(245,241,227,0.76)", lineHeight: 1.7 }}>
-          {artifact.result}
-        </p>
-        <a
-          href={artifact.href}
-          target={artifact.href.startsWith("http") ? "_blank" : undefined}
-          rel={artifact.href.startsWith("http") ? "noreferrer" : undefined}
-          style={{
-            marginTop: "1.4rem",
-            display: "inline-block",
-            color: isPrimary
-              ? "rgba(0,166,118,0.96)"
-              : "rgba(0,166,118,0.68)",
-            textTransform: "uppercase",
-            letterSpacing: "0.24em",
-            fontSize: "0.76rem",
-            textDecoration: "none",
-          }}
-        >
-          {artifact.id === "albums"
-            ? "music traces"
-            : artifact.href.replace(/^https?:\/\//, "")}
-        </a>
-      </div>
+      <p
+        style={{
+          maxWidth: "32ch",
+          fontSize: "clamp(1rem,1.9vw,1.4rem)",
+          color: isPrimary
+            ? "rgba(245,241,227,0.42)"
+            : "rgba(245,241,227,0.34)",
+          margin: 0,
+        }}
+      >
+        {artifact.distortion}
+      </p>
+
+      <p
+        style={{
+          maxWidth: "26ch",
+          fontSize: "clamp(1.3rem,2.6vw,2.8rem)",
+          color: isPrimary
+            ? "rgba(245,241,227,0.92)"
+            : "rgba(245,241,227,0.6)",
+          lineHeight: 1.28,
+          margin: 0,
+        }}
+      >
+        {artifact.shift}
+      </p>
+
+      <p
+        style={{
+          maxWidth: "35rem",
+          margin: 0,
+          color: "rgba(245,241,227,0.76)",
+          lineHeight: 1.7,
+          opacity: isPrimary ? 1 : 0.85,
+        }}
+      >
+        {artifact.result}
+      </p>
+
+      <a
+        href={artifact.href}
+        target={artifact.href.startsWith("http") ? "_blank" : undefined}
+        rel={artifact.href.startsWith("http") ? "noreferrer" : undefined}
+        style={{
+          marginTop: "1.4rem",
+          display: "inline-block",
+          color: isPrimary
+            ? "rgba(0,166,118,0.98)"
+            : isHovered
+              ? "rgba(245,241,227,0.78)"
+              : "rgba(245,241,227,0.46)",
+          textTransform: "uppercase",
+          letterSpacing: "0.24em",
+          fontSize: isPrimary ? "0.84rem" : "0.8rem",
+          textDecoration: "none",
+          opacity: isPrimary || isHovered ? 1 : 0.72,
+          transform: isHovered ? "translateX(3px)" : "translateX(0)",
+          transition:
+            "color 400ms cubic-bezier(.22,1,.36,1), opacity 400ms cubic-bezier(.22,1,.36,1), transform 400ms cubic-bezier(.22,1,.36,1)",
+        }}
+      >
+        {artifact.id === "albums" ? "open music traces" : "open artifact"}
+      </a>
     </article>
   );
 }

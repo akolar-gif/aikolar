@@ -45,3 +45,27 @@ button, input { font: inherit; }
   background: rgba(0,166,118,0.22);
   color: var(--fg);
 }
+
+@keyframes textPulse {
+  0%, 100% {
+    opacity: 0.88;
+    text-shadow: 0 0 0 rgba(0, 166, 118, 0);
+    transform: translateZ(0);
+  }
+  50% {
+    opacity: 1;
+    text-shadow: 0 0 18px rgba(0, 166, 118, 0.10);
+    transform: translateZ(0);
+  }
+}
+
+.pulse-text {
+  animation: textPulse 3.8s var(--ease) infinite;
+  will-change: opacity, text-shadow;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pulse-text {
+    animation: none;
+  }
+}

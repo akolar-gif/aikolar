@@ -86,6 +86,7 @@ function WordMorph({ text }: { text: string }) {
         return (
           <p
             key={`${block}-${blockIndex}`}
+            className={blockIndex === 0 ? "pulse-text" : undefined}
             style={{
               maxWidth: "18ch",
               fontSize: "clamp(2rem, 4.2vw, 4.25rem)",
@@ -397,6 +398,7 @@ export default function Page() {
       {!result ? (
         <div style={{ maxWidth: 900, margin: "0 auto" }}>
           <p
+            className="pulse-text"
             style={{
               textTransform: "uppercase",
               letterSpacing: "0.34em",
@@ -706,6 +708,7 @@ export default function Page() {
             </div>
           </section>
           <div
+            className="pulse-text"
             style={{
               position: "fixed",
               bottom: "1.2rem",
